@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import tailwind from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <title>Pizza App</title>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+      <h1 class="text-4xl font-bold text-center text-gray-800">Pizza Orders</h1>
+      <ul id="orders" class="mt-8 divide-y divide-gray-200">
+        <!-- List of orders will be appended here -->
+      </ul>
+    </div>
+    <script>
+      // Connect to the socket
+      var socket = io();
+  
+      // Listen for messages from the socket
+      socket.on('message', function(msg){
+        // Parse the message as JSON
+        var order = JSON.parse(msg);
+  
+        // Create a list item with tailwind classes
+        var li = document.createElement('li');
+        li.className = "p-4 flex items-center space-x-4";
+  
+        // Create a div for the order details
+        var div = document.createElement('div');
+        div.className = "flex-1";
+  
+        // Create a paragraph for the order id
+        var order_id = document.createElement('p');
+        order_id.className = "text-lg font-semibold text-gray-900";
+        order_id.textContent = "Order ID: " + order.id;
+  
+        // Create a paragraph for the customer name
+        var customer_name = document.createElement('p');
+        customer_name.className = "text-sm text-gray-600";
+        customer_name.textContent = "Customer Name: " + order.name;
+
+        // Create a paragraph for the shop
+        var shop = document.createElement('p');
+        shop.className = "text-sm text-gray-600";
+        shop.textContent = "Shop: " + order.shop;
+
+        // Create a paragraph for the telephone number
+        var telephone = document.createElement('p');
+        telephone.className = "text-sm text-gray-600";
+        telephone.textContent = "Telephone: " + order.phoneNumber;
+
+        // Create a paragraph for the delivery address
+        var address = document.createElement('p');
+        address.className = "text-sm text-gray-600";
+        address.textContent = "Delivery Address: " + order.address;
+  
+        // Create a paragraph for the order id
+        var details = document.createElement('p');
+        details.className = "text-md font-semibold text-gray-900";
+        details.textContent = "Order Details: ";
+
+        // Create a paragraph for the pizzas
+        var pizzas = document.createElement('p');
+        pizzas.className = "text-sm text-gray-600";
+        pizzas.textContent = "Pizzas: ";
+        pizzas.style.marginLeft = "20px";
+
+        // Create a list for the pizzas
+        var ol = document.createElement('ol');
+
+        // Loop over the pizza array
+        for (var i = 0; i < order.pizzas.length; i++) {
+            // Get the pizza object
+            var pizza = order.pizzas[i];
+
+            // Create a list item for the pizza
+            var li2 = document.createElement('li');
+
+            // Create a span for the pizza name
+            var span1 = document.createElement('span');
+            span1.textContent = (i+1) + " - " + pizza.pizzaName;
+
+            // Append the spans to the list item
+            li2.appendChild(span1);
+            
+            if (pizza.additionalToppings.length > 0) {
+                // Create a span for the additional toppings
+                var span2 = document.createElement('span');
+                span2.textContent = " with " + pizza.additionalToppings.join(", ");
+                li2.appendChild(span2);
+            }
+
+            // Append the list item to the list
+            ol.appendChild(li2);
+        }
+
+        // Add some margin to the list element
+        ol.style.marginLeft = "20px";
+
+        // Append the list to the paragraph
+        pizzas.appendChild(ol);
+  
+        // Append the paragraphs to the div
+        div.appendChild(order_id);
+        div.appendChild(customer_name);
+        div.appendChild(shop);
+        div.appendChild(telephone);
+        div.appendChild(address);
+        div.appendChild(details);
+        div.appendChild(pizzas);
+  
+        // Create a span for the timestamp
+        var span = document.createElement('span');
+        span.className = "text-sm text-gray-400";
+        span.textContent = new Date(order.timestamp).toLocaleString();
+  
+        // Append the div and the span to the list item
+        li.appendChild(div);
+        li.appendChild(span);
+  
+        // Append the list item to the list
+        var ul = document.getElementById('orders');
+        ul.insertBefore(li, ul.firstChild);
+      });
+    </script>
+</body>
+</html>
