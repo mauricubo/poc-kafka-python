@@ -20,7 +20,7 @@
       var socket = io();
   
       // Listen for messages from the socket
-      socket.on('message', function(msg){
+      socket.on('order', function(msg){
         // Parse the message as JSON
         var order = JSON.parse(msg);
   

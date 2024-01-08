@@ -1,0 +1,8 @@
+{
+  "type": "record",
+  "namespace": "com.aldisued.avro",
+  "name": "PizzaOrderShop",
+  "fields": [
+    {"name": "shop", "type": "string"}
+  ]
+}
