@@ -27,11 +27,12 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java-version>1.8</java-version>
+    <maven.compiler.release>16</maven.compiler.release>
+    <java-version>16</java-version>
     <kafka.version>3.6.1</kafka.version>
     <avro.version>1.11.3</avro.version>
     <confluent.version>7.5.3</confluent.version>
-    <log4j.version>2.13.3</log4j.version>
+    <log4j.version>2.22.1</log4j.version>
   </properties>
 
   <dependencies>

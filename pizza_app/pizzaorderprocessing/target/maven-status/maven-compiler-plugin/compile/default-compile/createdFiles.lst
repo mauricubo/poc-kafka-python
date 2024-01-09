@@ -1,13 +1,9 @@
 com/aldisued/avro/PizzaShopRevenue.class
-com/aldisued/avro/Pizza$Builder.class
-com/aldisued/avro/PizzaShopRevenue$1.class
-com/aldisued/avro/PizzaOrderShop.class
-com/aldisued/PizzaShopRevenueStreamApp.class
-com/aldisued/avro/PizzaShopRevenue$Builder.class
-com/aldisued/avro/PizzaOrderShop$1.class
 com/aldisued/avro/Pizza.class
+com/aldisued/avro/Pizza$Builder.class
 com/aldisued/avro/PizzaOrder.class
 com/aldisued/avro/PizzaOrderShop$Builder.class
 com/aldisued/avro/PizzaOrder$Builder.class
-com/aldisued/avro/PizzaOrder$1.class
-com/aldisued/avro/Pizza$1.class
+com/aldisued/avro/PizzaOrderShop.class
+com/aldisued/PizzaShopRevenueStreamApp.class
+com/aldisued/avro/PizzaShopRevenue$Builder.class
