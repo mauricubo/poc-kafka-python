@@ -30,7 +30,8 @@ sr_conf = {'url': "http://schemaregistry:8085"}
 schema_registry = SchemaRegistryClient(sr_conf)
 
 key_deserializer = AvroDeserializer(schema_registry, get_schema("key.avsc"))
-value_deserializer = AvroDeserializer(schema_registry, get_schema("value.avsc"))
+value_pizza_orders_deserializer = AvroDeserializer(schema_registry, get_schema("value_pizza-orders.avsc"))
+value_pizza_shop_revenue_deserializer = AvroDeserializer(schema_registry, get_schema("value_pizza-shop-revenue.avsc"))
 
 # Create a Kafka Consumer (group id removed)
 consumer_conf = {'bootstrap.servers': kafka_server,
@@ -40,16 +41,21 @@ consumer = Consumer(consumer_conf)
 
 # Define a background task to consume messages from Kafka
 def consume_kafka():
-    consumer.subscribe([topic])
+    consumer.subscribe([topic, "pizza-shop-revenue"])
     while True:
         try:
             msg = consumer.poll(1.0)
             if msg is None:
                 continue
-            value = value_deserializer(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
             
-            if value is not None:
-                socketio.emit('order', json.dumps(value, ensure_ascii=False))
+            if msg.value() is not None:
+                print(msg.topic())
+                if msg.topic() == "pizza-orders":
+                    value = value_pizza_orders_deserializer(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
+                    socketio.emit('order', json.dumps(value, ensure_ascii=False))
+                elif msg.topic() == "pizza-shop-revenue":
+                    value = value_pizza_shop_revenue_deserializer(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
+                    socketio.emit('revenue', json.dumps(value, ensure_ascii=False))
             else:
                 print("no value found")
                 exit(1)

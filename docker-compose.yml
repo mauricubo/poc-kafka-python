@@ -86,6 +86,8 @@ services:
       - kafka
       - zookeeper
       - schemaregistry
+      - app_producer
+      - pizza_order_processing
   
   pizza_order_processing:
     build: ./pizza_app/pizzaorderprocessing
