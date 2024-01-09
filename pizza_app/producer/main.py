@@ -23,7 +23,12 @@ def get_schema(fileName: str):
 
 def main():
     # Configure the Kafka producer with Avro serialization
-    producer_config = {'bootstrap.servers': kafka_server}
+    producer_config = {
+        'bootstrap.servers': kafka_server,
+        'enable.idempotence': True,
+        'acks': 'all',
+        'max.in.flight.requests.per.connection': 5,
+    }
     schema_registry_conf = {'url': "http://schemaregistry:8085"}
     
     # Create a Kafka producer instance
