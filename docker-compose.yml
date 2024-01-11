@@ -14,6 +14,7 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry:8085
       DYNAMIC_CONFIG_ENABLED: 'true'
 
   zookeeper:
@@ -59,9 +60,6 @@ services:
       SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "http"
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
-  
-  # End Kafka Cluster Services
-  # Consumer and Producer Services (only PoC)
 
   # Generate random orders and send them to kafka
   app_producer:
@@ -73,6 +71,8 @@ services:
       APP_TOPIC: pizza-orders
     depends_on:
       - kafka
+      - zookeeper
+      - schemaregistry
     
   # Web interface to see the pizza orders in real time
   app_consumer:
@@ -84,3 +84,19 @@ services:
       - 3000:3000
     depends_on:
       - kafka
+      - zookeeper
+      - schemaregistry
+      - app_producer
+      - pizza_order_processing
+  
+  pizza_order_processing:
+    build: ./pizza_app/pizzaorderprocessing
+    environment:
+      KAFKA_SERVER: kafka:29092
+      SCHEMA_REGISTRY_URL: http://schemaregistry:8085
+      APP_TOPIC: pizza-orders
+    depends_on:
+      - kafka
+      - zookeeper
+      - schemaregistry
+      - app_producer

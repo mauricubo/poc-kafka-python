@@ -9,6 +9,23 @@
     <title>Pizza App</title>
 </head>
 <body class="bg-gray-100">
+    <div class="container mx-auto bg-gray-100 p-4">
+      <!-- Create a heading for the dashboard -->
+      <h1 class="text-center text-4xl font-bold mb-8">Dashboard</h1>
+      <!-- Create a table for the data -->
+      <table class="table-auto mx-auto border-collapse border-2 border-gray-300">
+        <!-- Create a table header row -->
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border border-gray-300 p-4">Shop</th>
+            <th class="border border-gray-300 p-4">Money Earned</th>
+          </tr>
+        </thead>
+        <!-- Create a table body with some sample data -->
+        <tbody id="shopRevenue">
+        </tbody>
+      </table>
+    </div>
     <div class="container mx-auto p-4">
       <h1 class="text-4xl font-bold text-center text-gray-800">Pizza Orders</h1>
       <ul id="orders" class="mt-8 divide-y divide-gray-200">
@@ -18,12 +35,49 @@
     <script>
       // Connect to the socket
       var socket = io();
-  
+      
+      socket.on('revenue', function(msg){
+        var parsed = JSON.parse(msg);
+        console.log(parsed);
+
+        var shopRevenue = document.getElementById('shopRevenue');
+        var tr = document.createElement('tr');
+        var revenueTd = document.getElementById("td-revenue-" + parsed.shop);
+        if (revenueTd) {
+          revenueTd.textContent = parsed.revenue.toString() + "€";
+        } else { // initial
+          tr.id = 'tr-' + parsed.shop;
+          var nameTd = document.createElement('td'); // shop name
+          nameTd.id = "td-shop-" + parsed.shop;
+          nameTd.className = "border border-gray-300 p-4";
+          nameTd.textContent = parsed.shop;
+          var revenueTd = document.createElement('td'); // revenue
+          revenueTd.id = "td-revenue-" + parsed.shop;
+          revenueTd.className = "border border-gray-300 p-4";
+          revenueTd.textContent = parsed.revenue.toString() + "€";
+          tr.appendChild(nameTd);
+          tr.appendChild(revenueTd);
+          shopRevenue.appendChild(tr);
+        }
+        tr.children.sort((a,b) => {
+          var x = a.children[0].textContent;
+          var y = b.children[0].textContent;
+          if (x < y) {
+            return -1;
+          }
+          if (y < x) {
+            return 1;
+          }
+          return 0;
+        });
+      });
+      
       // Listen for messages from the socket
-      socket.on('message', function(msg){
+      socket.on('order', function(msg){
         // Parse the message as JSON
         var order = JSON.parse(msg);
-  
+        console.log(order);
+
         // Create a list item with tailwind classes
         var li = document.createElement('li');
         li.className = "p-4 flex items-center space-x-4";

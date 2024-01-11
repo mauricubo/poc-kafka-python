@@ -1,0 +1,1 @@
+{"type":"record","name":"PizzaOrderShop","namespace":"com.aldisued.avro","fields":[{"name":"shop","type":"string"}]}
